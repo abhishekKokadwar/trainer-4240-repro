@@ -49,7 +49,7 @@ jobs:
         run: |
           docker run -d --name target "${{ matrix.image }}" python -c "import time; time.sleep(600)"
           docker run --rm --pid=container:target --cap-add SYS_PTRACE "${{ matrix.image }}" bash -lc \
-            'PIP_BREAK_SYSTEM_PACKAGES=1 python -m pip install -q --disable-pip-version-check py-spy 2>&1 | tail -3; export PATH=$HOME/.local/bin:$PATH; py-spy dump --pid $(pgrep -f "time.sleep")' | tee pyspy-check.txt
+            'PIP_BREAK_SYSTEM_PACKAGES=1 python -m pip install -q --disable-pip-version-check py-spy 2>&1 | tail -3; export PATH=$HOME/.local/bin:$PATH; py-spy dump --pid 1' | tee pyspy-check.txt
           docker rm -f target >/dev/null
           grep -q "time.sleep\|<module>" pyspy-check.txt
 
